@@ -29,7 +29,6 @@ plot (t, xa, t, ya)
 legend("x", "y")
 
 %zamknięta metoda Eulera
-%powinno się powoli osłabiać czy coś
 for n = 1:N-1
     F = @(u) [xb(n) - u(1) + h*fx(u(1),u(2));
         yb(n) - u(2) + h*fy(u(1),u(2))];

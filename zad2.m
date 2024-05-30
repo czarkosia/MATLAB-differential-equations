@@ -1,7 +1,7 @@
 clear
 close all
 
-h = 0.005;
+h = 0.0017;
 P = [13 0.14 0.06 16];
 fx = @(x,y) x*(P(1)-P(2)*y);
 fy = @(x,y) y*(P(3)*x-P(4)); 
@@ -54,20 +54,11 @@ plot(t, xc, t, yc);
 legend("x", "y")
 
 %metoda Adamsa-Moultona 3. rzędu
-%dwukrokowa, pierwszy xd(2) i yd(2) wyznacz zamkniętą metodą Eulera
 F = @(u) [xd(1) - u(1) + h*fx(u(1),u(2));
         yd(1) - u(2) + h*fy(u(1),u(2))];
 u_temp = fsolve(F, [xd(1); yd(1)]);
-
 xd(2) = u_temp(1);
 yd(2) = u_temp(2);
-
-% F = @(u) [xd(2) - u(1) + 1/2*h*fx(u(1),u(2)) + 1/2*h*fx(xd(2),yd(2));
-%         yd(2) - u(2) + h*fy(u(1),u(2)) + 1/2*h*fy(xd(2),yd(2))];
-% u_temp = fsolve(F, [xd(1); yd(1)]);
-% 
-% xd(3) = u_temp(1);
-% yd(3) = u_temp(2);
 
 for n = 2:N-1
     F = @(u) [xd(n) - u(1) + 5/12*h*fx(u(1),u(2)) + 2/3*h*fx(xd(n),yd(n)) - 1/12*h*fx(xd(n-1),yd(n-1));

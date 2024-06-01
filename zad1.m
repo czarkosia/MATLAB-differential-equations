@@ -10,3 +10,6 @@ u0 = [310; 50];
 
 figure;
 plot(t, u);
+xlabel("t")
+ylabel("x, y")
+legend("x","y")

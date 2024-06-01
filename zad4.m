@@ -3,15 +3,12 @@ close all
 
 H = logspace(-4, -2);
 P = [13 0.14 0.06 16];
+
 Lotka_Volterra = @(t,u) [u(1).*(P(1)-P(2)*u(2)); u(2).*(P(3)*u(1)-P(4))];
 fx = @(x,y) x*(P(1)-P(2)*y);
 fy = @(x,y) y*(P(3)*x-P(4)); 
-
-tspan = [0 1];
-u0 = [310; 50];
 options = odeset('RelTol',1e-8, 'AbsTol', 1e-12);
-[tref,u] = ode45(Lotka_Volterra, tspan, u0, options);
-Nref = length(tref);
+u0 = [310; 50];
 
 error_xa = zeros(length(H), 1);
 error_xb = zeros(length(H), 1);
@@ -32,6 +29,10 @@ for h = H
     yc = ya;
     xd = xa;
     yd = ya;
+
+    [tref,u] = ode45(Lotka_Volterra, t, u0, options);
+    xref = u(:,1);
+    yref = u(:,2);
 
     %otwarta metoda Eulera
     for n = 2:N
@@ -75,38 +76,7 @@ for h = H
         yd(n+1) = u_temp(2);
     end
 
-    if (Nref > N)
-        delta_t = abs(t-tref);
-        xref = xa;
-        yref = ya;
-        for n = 1:N
-            [~,i] = min(delta_t(:,n));
-            xref(n) = u(i,1);
-            yref(n) = u(i,2);
-        end
-    end
-    if (Nref < N)
-        delta_t = abs(tref-t);
-        xref = u(:,1).';
-        yref = u(:,2).';
-        ua = [xa ya];
-        ub = [xb yb];
-        uc = [xc yc];
-        ud = [xd yd];
-        clear xa ya xb yb xc yc xd yd
-        for n = 1:Nref
-            [~,i] = min(delta_t(n,:));
-            xa(n) = ua(i,1);
-            ya(n) = ua(i,2);
-            xb(n) = ub(i,1);
-            yb(n) = ub(i,2);
-            xc(n) = uc(i,1);
-            yc(n) = uc(i,2);
-            xd(n) = ud(i,1);
-            yd(n) = ud(i,2);
-        end
-    end
-
+    %zagregowany błąd względny x dla każdej metody
     error_xa(idx) = sqrt(sum((xa - xref).^2))/sqrt(sum(xref.^2));
     error_xb(idx) = sqrt(sum((xb - xref).^2))/sqrt(sum(xref.^2));
     error_xc(idx) = sqrt(sum((xc - xref).^2))/sqrt(sum(xref.^2));
@@ -116,3 +86,5 @@ end
 
 loglog(H, error_xa, H, error_xb, H, error_xc, H, error_xd)
 legend("Otwarta metoda Eulera", "Zamknięta metoda Eulera", "Otwarta metoda punktu środkowego", "Metoda Adamsa-Moultona 3. rzędu")
+xlabel("Wartość kroku h")
+ylabel("Zagregowany błąd względny x")

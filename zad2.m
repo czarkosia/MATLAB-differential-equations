@@ -24,9 +24,12 @@ for n = 2:N
     xa(n) = xa(n-1) + h*fx(xa(n-1),ya(n-1));
     ya(n) = ya(n-1) + h*fy(xa(n-1),ya(n-1));
 end
-figure;
+
+figure("Name","Otwarta metoda Eulera");
 plot (t, xa, t, ya)
 legend("x", "y")
+xlabel("t")
+ylabel("x, y")
 
 %zamknięta metoda Eulera
 for n = 1:N-1
@@ -38,9 +41,12 @@ for n = 1:N-1
     xb(n+1) = u_temp(1);
     yb(n+1) = u_temp(2);
 end
-figure;
+
+figure("Name","Zamknięta metoda Eulera");
 plot(t, xb, t, yb);
 legend("x", "y")
+xlabel("t")
+ylabel("x, y")
 
 %otwarta metoda punktu środkowego
 for n = 2:N
@@ -49,9 +55,12 @@ for n = 2:N
     xc(n) = xc(n-1) + h*fx(x_temp,y_temp);
     yc(n) = yc(n-1) + h*fy(x_temp,y_temp);
 end
-figure;
+
+figure("Name","Otwarta metoda punktu środkowego");
 plot(t, xc, t, yc);
 legend("x", "y")
+xlabel("t")
+ylabel("x, y")
 
 %metoda Adamsa-Moultona 3. rzędu
 F = @(u) [xd(1) - u(1) + h*fx(u(1),u(2));
@@ -69,8 +78,9 @@ for n = 2:N-1
     xd(n+1) = u_temp(1);
     yd(n+1) = u_temp(2);
 end
-figure;
+
+figure("Name", "Metoda Adamsa-Moultona 3. rzędu");
 plot(t, xd, t, yd);
 legend("x", "y")
-
-%zad4 najlepiej loglogiem wyrysować
+xlabel("t")
+ylabel("x, y")
